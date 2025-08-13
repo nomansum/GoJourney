@@ -10,9 +10,13 @@ func worker(cancel <-chan struct{}) {
 	defer fmt.Println("Worker stopped")
 	for {
 		select {
-		case <-cancel:
-			fmt.Println("Worker canceled")
-			return
+		case _, ok := <-cancel:
+			if ok {
+
+				fmt.Println("Worker canceled")
+				return
+			}
+
 		default:
 			// Do some work here
 			time.Sleep(time.Second)
@@ -21,7 +25,7 @@ func worker(cancel <-chan struct{}) {
 	}
 }
 
-func main() {
+func maino() {
 	cancel := make(chan struct{})
 	go worker(cancel)
 	time.Sleep(5 * time.Second)
